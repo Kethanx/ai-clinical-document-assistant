@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+python-dotenv
+
+azure-storage-blob
+azure-storage-queue
+azure-search-documents
+openai
+
+pypdf
+tiktoken
