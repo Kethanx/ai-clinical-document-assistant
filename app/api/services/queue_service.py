@@ -18,3 +18,21 @@ class QueueService:
 
     def send_document_for_processing(self, message: dict) -> None:
         self.queue_client.send_message(json.dumps(message))
+
+    def receive_message(self):
+        messages = self.queue_client.receive_messages(messages_per_page=1)
+        page = next(messages.by_page(), [])
+
+        for message in page:
+            return message
+
+        return None
+
+    def parse_message(self, message) -> dict:
+        return json.loads(message.content)
+
+    def delete_message(self, message) -> None:
+        self.queue_client.delete_message(
+            message.id,
+            message.pop_receipt,
+        )
