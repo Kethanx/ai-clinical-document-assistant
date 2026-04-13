@@ -5,3 +5,4 @@ load_dotenv()
 
 AZURE_STORAGE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 BLOB_CONTAINER_NAME = os.getenv("BLOB_CONTAINER_NAME", "documents")
+QUEUE_NAME = os.getenv("QUEUE_NAME", "document-ingestion")
