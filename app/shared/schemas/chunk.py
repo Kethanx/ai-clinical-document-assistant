@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class DocumentChunk(BaseModel):
@@ -7,3 +8,4 @@ class DocumentChunk(BaseModel):
     document_name: str
     page_number: int
     chunk_text: str
+    embedding: List[float] | None = None
