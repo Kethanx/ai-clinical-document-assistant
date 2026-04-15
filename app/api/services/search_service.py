@@ -11,6 +11,7 @@ from azure.search.documents.indexes.models import (
     VectorSearch,
     VectorSearchProfile,
 )
+from azure.search.documents.models import VectorizedQuery
 
 from app.api.core.config import (
     AZURE_SEARCH_API_KEY,
@@ -92,3 +93,31 @@ class SearchService:
         result = self.search_client.upload_documents(documents=chunks)
         succeeded = sum(1 for item in result if item.succeeded)
         print(f"Uploaded {succeeded}/{len(chunks)} chunks to Azure AI Search.")
+
+    def vector_search(self, embedding: list[float], top_k: int = 5) -> list[dict]:
+        vector_query = VectorizedQuery(
+            vector=embedding,
+            k_nearest_neighbors=top_k,
+            fields="embedding",
+        )
+
+        results = self.search_client.search(
+            search_text=None,
+            vector_queries=[vector_query],
+            select=["chunk_id", "document_id", "document_name", "page_number", "chunk_text"],
+            top=top_k,
+        )
+
+        chunks = []
+        for result in results:
+            chunks.append(
+                {
+                    "chunk_id": result["chunk_id"],
+                    "document_id": result["document_id"],
+                    "document_name": result["document_name"],
+                    "page_number": result["page_number"],
+                    "chunk_text": result["chunk_text"],
+                }
+            )
+
+        return chunks
