@@ -3,7 +3,10 @@ from pydantic import BaseModel
 
 class Citation(BaseModel):
     document_name: str
-    page_number: int
+    document_title: str
+    publication_date: str
+    authors: str
+    pages: list[int]
 
 
 class AskQuestionResponse(BaseModel):

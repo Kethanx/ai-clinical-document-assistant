@@ -94,7 +94,7 @@ class SearchService:
         succeeded = sum(1 for item in result if item.succeeded)
         print(f"Uploaded {succeeded}/{len(chunks)} chunks to Azure AI Search.")
 
-    def vector_search(self, embedding: list[float], top_k: int = 5) -> list[dict]:
+    def vector_search(self, query_text: str, embedding: list[float], top_k: int = 5) -> list[dict]:
         vector_query = VectorizedQuery(
             vector=embedding,
             k_nearest_neighbors=top_k,
@@ -102,11 +102,11 @@ class SearchService:
         )
 
         results = self.search_client.search(
-            search_text=None,
+            search_text=query_text,
             vector_queries=[vector_query],
             select=["chunk_id", "document_id", "document_name", "page_number", "chunk_text"],
             top=top_k,
-        )
+)
 
         chunks = []
         for result in results:
