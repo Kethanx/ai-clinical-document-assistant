@@ -74,6 +74,9 @@ async def ask_question(request: AskQuestionRequest):
 
     citations.sort(key=lambda c: c.document_title)
 
+    if "not available in the references" in answer.lower():
+        citations = []
+
     return AskQuestionResponse(
         question=request.question,
         answer=answer,

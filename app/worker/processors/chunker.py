@@ -9,7 +9,7 @@ def chunk_pages(
     document_id: str,
     document_name: str,
     chunk_size: int = 1000,
-    overlap: int = 150,
+    overlap: int = 100,
 ) -> List[DocumentChunk]:
     chunks: List[DocumentChunk] = []
 

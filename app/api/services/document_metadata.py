@@ -4,10 +4,15 @@ DOCUMENT_METADATA = {
         "publication_date": "2023",
         "authors": "Joglar JA, et al.",
     },
-    "evaluation-and-management-of-the-child-with-acute-decompensated-heart-failure-a-scientific-statement-from-the-american-heart-association.pdf": {
-        "document_title": "Evaluation and Management of the Child With Acute Decompensated Heart Failure",
-        "publication_date": "Apr 2026",
-        "authors": "Cabrera AG, Price JF, Hong BJ, et al.",
+    "heidenreich-et-al-2022-2022-aha-acc-hfsa-guideline-for-the-management-of-heart-failure-a-report-of-the-american-college.pdf": {
+        "document_title": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+        "publication_date": "2022",
+        "authors": "Heidenreich PA, et al.",
+    },
+    "whelton-et-al-2017-2017-acc-aha-aapa-abc-acpm-ags-apha-ash-aspc-nma-pcna-guideline-for-the-prevention-detection.pdf": {
+        "document_title": "2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults",
+        "publication_date": "2017",
+        "authors": "Whelton PA, et al.",
     },
 }
 
