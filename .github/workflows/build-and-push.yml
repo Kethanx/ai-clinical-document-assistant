@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build, Push, and Deploy to AKS
 
 on:
   push:
@@ -6,34 +6,60 @@ on:
       - main
 
 env:
-  ACR_LOGIN_SERVER: aiclinicalacr.azurecr.io
+  RESOURCE_GROUP: ai-clinical-rg
+  AKS_CLUSTER_NAME: cardiology-aks
+  NAMESPACE: cardiology-assistant
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to Azure Container Registry
-        uses: docker/login-action@v3
+      - name: Azure login
+        uses: azure/login@v2
         with:
-          registry: ${{ env.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to Azure Container Registry
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
 
       - name: Build and push API image
         run: |
-          docker build -f Dockerfile.api -t $ACR_LOGIN_SERVER/cardiology-api:latest .
-          docker push $ACR_LOGIN_SERVER/cardiology-api:latest
+          docker build -f Dockerfile.api -t ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-api:${{ github.sha }} .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-api:${{ github.sha }}
 
       - name: Build and push frontend image
         run: |
-          docker build -f Dockerfile.frontend -t $ACR_LOGIN_SERVER/cardiology-frontend:latest .
-          docker push $ACR_LOGIN_SERVER/cardiology-frontend:latest
+          docker build -f Dockerfile.frontend -t ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-frontend:${{ github.sha }} .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-frontend:${{ github.sha }}
 
       - name: Build and push worker image
         run: |
-          docker build -f Dockerfile.worker -t $ACR_LOGIN_SERVER/cardiology-worker:latest .
-          docker push $ACR_LOGIN_SERVER/cardiology-worker:latest
+          docker build -f Dockerfile.worker -t ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-worker:${{ github.sha }} .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/cardiology-worker:${{ github.sha }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group $RESOURCE_GROUP \
+            --name $AKS_CLUSTER_NAME \
+            --overwrite-existing
+
+      - name: Update Kubernetes deployments
+        run: |
+          kubectl set image deployment/cardiology-api \
+            cardiology-api=${{ secrets.ACR_LOGIN_SERVER }}/cardiology-api:${{ github.sha }} \
+            -n $NAMESPACE
+
+          kubectl set image deployment/cardiology-frontend \
+            cardiology-frontend=${{ secrets.ACR_LOGIN_SERVER }}/cardiology-frontend:${{ github.sha }} \
+            -n $NAMESPACE
+
+      - name: Show rollout status
+        run: |
+          kubectl rollout status deployment/cardiology-api -n $NAMESPACE
+          kubectl rollout status deployment/cardiology-frontend -n $NAMESPACE
