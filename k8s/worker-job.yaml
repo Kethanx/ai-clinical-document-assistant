@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cardiology-worker
+  namespace: cardiology-assistant
+spec:
+  template:
+    metadata:
+      labels:
+        app: cardiology-worker
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: cardiology-worker
+          image: YOUR_ACR_LOGIN_SERVER/cardiology-worker:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cardiology-secrets
+  backoffLimit: 1

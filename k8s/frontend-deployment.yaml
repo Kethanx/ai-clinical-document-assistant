@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cardiology-frontend
+  namespace: cardiology-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cardiology-frontend
+  template:
+    metadata:
+      labels:
+        app: cardiology-frontend
+    spec:
+      containers:
+        - name: cardiology-frontend
+          image: aiclinicalacr.azurecr.io/cardiology-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8501
+          envFrom:
+            - secretRef:
+                name: cardiology-secrets
+          env:
+            - name: API_URL
+              value: "http://cardiology-api-service:8000/questions/ask"

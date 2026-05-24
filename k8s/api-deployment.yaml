@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cardiology-api
+  namespace: cardiology-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cardiology-api
+  template:
+    metadata:
+      labels:
+        app: cardiology-api
+    spec:
+      containers:
+        - name: cardiology-api
+          image: aiclinicalacr.azurecr.io/cardiology-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: cardiology-secrets
