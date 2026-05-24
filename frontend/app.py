@@ -1,8 +1,9 @@
 import uuid
 import requests
 import streamlit as st
+import os
 
-API_URL = "http://127.0.0.1:8000/questions/ask"
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000/questions/ask")
 
 st.set_page_config(
     page_title="Cardiology Assistant",
@@ -11,7 +12,7 @@ st.set_page_config(
 )
 
 st.title("🩺 Cardiology Assistant")
-st.caption("Cardiology reference assistant")
+st.caption("Ask a question about heart failure, atrial fibrillation, or high blood pressure.")
 
 if "conversation_id" not in st.session_state:
     st.session_state.conversation_id = str(uuid.uuid4())
