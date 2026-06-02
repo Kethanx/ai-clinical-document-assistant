@@ -209,3 +209,8 @@ __marimo__/
 .venv
 __pycache__
 .env
+
+infra/terraform/terraform.tfvars
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
