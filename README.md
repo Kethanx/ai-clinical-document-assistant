@@ -66,7 +66,7 @@ The assistant returns grounded answers with references to the indexed cardiology
 
 ## Frontend Demo
 
-![Frontend Demo](docs/images/frontend-demo.png)
+![Frontend Demo](docs/images/frontend-demo.PNG)
 
 ---
 
